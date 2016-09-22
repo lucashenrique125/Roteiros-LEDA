@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<head/><log>
+<record>
+  <date>2016-09-14T20:38:29.179-0300</date>
+  <logger>LUCAS HENRIQUE DE LIMA E SILVA</logger>
+  <level>FINE</level>
+  <message>File 115110163-LUCAS HENRIQUE DE LIMA E SILVA.zip was received. It was sent by LUCAS HENRIQUE DE LIMA E SILVA from IP 192.168.25.4</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-09-14T22:18:43.503-0300</date>
+  <logger>LUCAS HENRIQUE DE LIMA E SILVA</logger>
+  <level>FINE</level>
+  <message>File 115110163-LUCAS HENRIQUE DE LIMA E SILVA.zip was received. It was sent by LUCAS HENRIQUE DE LIMA E SILVA from IP 192.168.25.9</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-09-14T22:30:30.196-0300</date>
+  <logger>LUCAS HENRIQUE DE LIMA E SILVA</logger>
+  <level>FINE</level>
+  <message>File 115110163-LUCAS HENRIQUE DE LIMA E SILVA.zip was received. It was sent by LUCAS HENRIQUE DE LIMA E SILVA from IP 192.168.25.9</message>
+</record>
