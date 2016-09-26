@@ -44,8 +44,29 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
 
 	@Override
 	public BNodePosition<T> search(T element) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not Implemented yet!");
+		if (element != null){
+			return search(this.getRoot(), element);
+		} else {
+			return new BNodePosition<T>();
+		}
+	}
+	
+	private BNodePosition<T> search(BNode<T> node, T element){
+		int i = 0;
+		
+		while (i <= node.size() && element.compareTo(node.getElementAt(i)) > 0){
+			i++;
+		}
+		
+		if (i <= node.size() && element.equals(node.getElementAt(i))){
+			return new BNodePosition<T>(node, i);
+		}
+		
+		if (node.isLeaf()) {
+			return new BNodePosition<T>();
+		}
+		
+		return search(node.getChildren().get(i), element);
 	}
 
 	@Override
