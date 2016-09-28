@@ -30,8 +30,15 @@ public class SkipListImpl<T> implements SkipList<T> {
 	 * metodo deve conectar apenas o forward[0].
 	 */
 	private void connectRootToNil() {
-		// TODO Implement your code
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if (USE_MAX_HEIGHT_AS_HEIGHT) {
+			for (int i = 0; i < this.maxHeight; i++) {
+				root.forward[i] = NIL;
+			}
+		} else {
+			for (int i = 0; i < this.height; i++) {
+				root.forward[i] = NIL;
+			}
+		}
 	}
 
 	/**
@@ -49,38 +56,127 @@ public class SkipListImpl<T> implements SkipList<T> {
 
 	@Override
 	public void insert(int key, T newValue, int height) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if (height > maxHeight || height < 0 || newValue == null) {
+			return;
+		}
+
+		fixRoot(height);
+
+		SkipListNode<T>[] update = new SkipListNode[this.height];
+
+		SkipListNode<T> aux = root;
+
+		for (int i = this.height - 1; i >= 0; i--) {
+			while (aux.forward[i] != null && aux.forward[i].key < key) {
+				aux = aux.forward[i];
+			}
+
+			update[i] = aux; // guarda o caminho
+		}
+
+		aux = aux.forward[0];
+
+		if (aux.key == key) {
+			aux.value = newValue;
+		} else {
+			aux = new SkipListNode<T>(key, height, newValue);
+
+			for (int i = 0; i < height; i++) {
+				aux.forward[i] = update[i].forward[i];
+				update[i].forward[i] = aux;
+			}
+		}
+	}
+
+	public void fixRoot(int height) {
+		if (this.USE_MAX_HEIGHT_AS_HEIGHT) {
+			height = this.maxHeight;
+		}
+
+		if (this.height < height) {
+			for (int i = this.height; i < height; i++) {
+				this.root.forward[i] = NIL;
+			}
+			this.height = height;
+		}
+
 	}
 
 	@Override
 	public void remove(int key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		SkipListNode<T>[] update = new SkipListNode[this.height];
+		SkipListNode<T> aux = this.root;
+
+		for (int i = this.height - 1; i >= 0; i--) {
+			while (aux.forward[i] != null && aux.forward[i].key < key) {
+				aux = aux.forward[i];
+			}
+			update[i] = aux;
+		}
+
+		if (aux.forward[0].key == key) {
+			aux = aux.forward[0];
+			for (int i = aux.height - 1; i >= 0; i--) {
+				update[i].forward[i] = aux.forward[i];
+				if (!this.USE_MAX_HEIGHT_AS_HEIGHT && (update[i] == this.root) && (update[i].forward[i] == this.NIL)
+						&& i != 0)
+					update[i].forward[i] = null;
+			}
+
+		}
 	}
 
 	@Override
 	public int height() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return height;
 	}
 
 	@Override
 	public SkipListNode<T> search(int key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		SkipListNode<T> aux = this.root;
+
+		for (int i = height - 1; i >= 0; i--) {
+			while (aux.forward[i] != null && aux.forward[i].key < key) {
+				aux = aux.forward[i]; // anda ate o ultimo no com mesma altura
+			}
+		}
+
+		aux = aux.forward[0];
+
+		if (aux.key == key) {
+			return aux;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		SkipListNode<T> aux = this.root.forward[0];
+		int size = 0;
+
+		while (aux != NIL) {
+			size++;
+			aux = aux.forward[0];
+		}
+
+		return size;
 	}
 
 	@Override
 	public SkipListNode<T>[] toArray() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+
+		SkipListNode<T> aux = root;
+		SkipListNode<T>[] array = new SkipListNode[this.size() + 2];
+
+		int i = 0;
+		while (aux != null) {
+			array[i] = aux;
+			i++;
+			aux = aux.forward[0];
+		}
+
+		return array;
 	}
 
 }
