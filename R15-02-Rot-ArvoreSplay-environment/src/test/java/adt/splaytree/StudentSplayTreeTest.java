@@ -2,6 +2,8 @@ package adt.splaytree;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.Before;
 
@@ -58,7 +60,9 @@ public class StudentSplayTreeTest {
 		splay.remove(1);
 		assertEquals(3, splay.size());
 		assertArrayEquals(new Integer[] { -100, 5, 120 }, splay.preOrder());
+		System.out.println(Arrays.toString(splay.preOrder()));
 		splay.search(3);
+		System.out.println(Arrays.toString(splay.preOrder()));
 		assertArrayEquals(new Integer[] { 5, -100, 120 }, splay.preOrder());
 
 		splay.remove(-100);

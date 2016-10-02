@@ -7,60 +7,45 @@ import adt.bt.Util;
 public class SplayTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements SplayTree<T> {
 
 	private void splay(BSTNode<T> node) {
-		if (node == null || node.isEmpty() || node == this.root)
-			return ;
+		if (node == null || node.isEmpty() || node.equals(root)) {
+			return;
 
-		BSTNode<T> parent = (BSTNode<T>) node.getParent();
-		
-		if(node.getParent() == super.getRoot()){
-			if(isLeftChild(node, parent)){
-				rightRotation(parent);
-			}else if(isRightChild(node, parent)){
-				leftRotation(parent);
+		} else if (node.getParent().equals(super.getRoot())) {
+			if (isRightChild(node)) {
+				leftRotation(root);
+			} else if (isLeftChild(node)) {
+				rightRotation(root);
 			}
-		}else{
-			if(isLeftChild(parent, (BSTNode<T>) parent.getParent()) && isLeftChild(node, parent)){
-				rightRotation((BSTNode<T>) parent.getParent());
-				rightRotation(parent);
-			}else if (isRightChild(parent, (BSTNode<T>) parent.getParent()) && isRightChild(node, parent)){
-				leftRotation((BSTNode<T>) parent.getParent());
-				leftRotation(parent);
-			}else if (isLeftChild(parent, (BSTNode<T>) parent.getParent()) && isRightChild(node, parent)){
-				leftRotation(parent);
-				rightRotation((BSTNode<T>) parent.getParent());
-			}else if (isRightChild(parent, (BSTNode<T>) parent.getParent()) && isLeftChild(node, parent)){
-				rightRotation(parent);
-				leftRotation((BSTNode<T>) parent.getParent());
+
+		} else if (isRightChild((BSTNode<T>) node.getParent())) {
+			if (isLeftChild(node)) {
+				rightRotation((BSTNode<T>) node.getParent());
+				leftRotation((BSTNode<T>) node.getParent());
+			} else if (isRightChild(node)) {
+				leftRotation((BSTNode<T>) node.getParent().getParent());
+				leftRotation((BSTNode<T>) node.getParent());
 			}
-		
-			splay(node);
+		} else if (isLeftChild((BSTNode<T>) node.getParent())) {
+			if (isRightChild(node)) {
+				leftRotation((BSTNode<T>) node.getParent());
+				rightRotation((BSTNode<T>) node.getParent());
+			}
+			if (isLeftChild(node)) {
+				rightRotation((BSTNode<T>) node.getParent().getParent());
+				rightRotation((BSTNode<T>) node.getParent());
+			}
 		}
+
+		splay(node);
 	}
 
-	// AUXILIARY
-	protected void leftRotation(BSTNode<T> node) {
-		if (node == null || node.isEmpty()) {
-			return;
-		}
+	public void insert(T element) {
+		super.insert(element);
 
-		BSTNode<T> nodeReturn = Util.leftRotation(node);
+		BSTNode<T> node = super.search(element);
 
-		if (node == this.root) {
-			this.root = nodeReturn;
-		}
-	}
+		splay(node);
 
-	// AUXILIARY
-	protected void rightRotation(BSTNode<T> node) {
-		if (node == null || node.isEmpty()) {
-			return;
-		}
-
-		BSTNode<T> nodeReturn = Util.rightRotation(node);
-
-		if (node == this.root) {
-			this.root = nodeReturn;
-		}
 	}
 
 	public BSTNode<T> search(T element) {
@@ -75,41 +60,42 @@ public class SplayTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implement
 		return node;
 	}
 
-	public void insert(T element) {
-		BSTNode<T> node = insert(element, super.getRoot(), new BSTNode<T>());
-
-		splay(node);
-	}
-
 	public void remove(T element) {
-		BSTNode<T> node = super.search(element);
+		if (!isEmpty()) {
 
-		if (!node.isEmpty()) {
-			super.remove(node);
-			
-			splay((BSTNode<T>) node.getParent());
-		} else {
+			BSTNode<T> node = super.search(element);
+
+			if (!node.isEmpty()) {
+				super.remove(node);
+			}
+
 			splay((BSTNode<T>) node.getParent());
 		}
-
-		
-
 	}
 
-	private BSTNode<T> insert(T element, BSTNode<T> node, BSTNode<T> parent) {
-		if (node.isEmpty()) {
-			node.setData(element);
-			node.setLeft(new BSTNode<T>());
-			node.setRight(new BSTNode<T>());
-			node.setParent(parent);
+	// AUXILIARY
+		protected void leftRotation(BSTNode<T> node) {
+			if (node == null || node.isEmpty()) {
+				return;
+			}
 
-			return node;
-		} else if (element.compareTo(node.getData()) < 0) {
-			return insert(element, (BSTNode<T>) node.getLeft(), node);
-		} else if (element.compareTo(node.getData()) > 0) {
-			return insert(element, (BSTNode<T>) node.getRight(), node);
+			BSTNode<T> nodeReturn = Util.leftRotation(node);
+
+			if (node == this.root) {
+				this.root = nodeReturn;
+			}
 		}
 
-		return new BSTNode<T>();
-	}
+		// AUXILIARY
+		protected void rightRotation(BSTNode<T> node) {
+			if (node == null || node.isEmpty()) {
+				return;
+			}
+
+			BSTNode<T> nodeReturn = Util.rightRotation(node);
+
+			if (node == this.root) {
+				this.root = nodeReturn;
+			}
+		}
 }

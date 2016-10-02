@@ -23,7 +23,7 @@ public class StudentSkipListTest {
 		skip = new SkipListImpl<String>(4);
 
 		// TODO ajuste o valor de acordo com o exercicio de sua turma
-		((SkipListImpl<String>) skip).USE_MAX_HEIGHT_AS_HEIGHT = true;
+		((SkipListImpl<String>) skip).USE_MAX_HEIGHT_AS_HEIGHT = false;
 	}
 
 	@Test
