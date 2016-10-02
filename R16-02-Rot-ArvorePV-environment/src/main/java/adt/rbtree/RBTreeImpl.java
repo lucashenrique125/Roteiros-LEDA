@@ -205,11 +205,11 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements R
 		RBNode<T> p = (RBNode<T>) node.getParent();
 		RBNode<T> g = (RBNode<T>) node.getParent().getParent();
 
-		if (isRightChild(node, p) && isLeftChild((RBNode<T>) p, (RBNode<T>) g)) {
+		if (isRightChild(node) && isLeftChild((RBNode<T>) p)) {
 			leftRotation(p);
 
 			next = (RBNode<T>) node.getLeft();
-		} else if (isLeftChild(node, p) && isRightChild((RBNode<T>) p, (RBNode<T>) g)) {
+		} else if (isLeftChild(node) && isRightChild((RBNode<T>) p)) {
 			rightRotation(p);
 
 			next = (RBNode<T>) node.getRight();
@@ -225,7 +225,7 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements R
 		p.setColour(Colour.BLACK);
 		g.setColour(Colour.RED);
 
-		if (isLeftChild(node, p)) {
+		if (isLeftChild(node)) {
 			rightRotation(g);
 		} else {
 			leftRotation(g);
