@@ -1,7 +1,9 @@
 package adt.bst;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
@@ -26,63 +28,65 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private int height(BSTNode<T> node) {
-  	   if (node.isEmpty()) {
-  		  return -1;
-  	   }
-  	   
-  	 return Math.max(this.height((BSTNode<T>) node.getRight()), this.height((BSTNode<T>) node.getLeft())) + 1;
-    }
+		if (node.isEmpty()) {
+			return -1;
+		}
+
+		return Math.max(this.height((BSTNode<T>) node.getRight()), this.height((BSTNode<T>) node.getLeft())) + 1;
+	}
 
 	@Override
-    public BSTNode<T> search(T element) {
-        if (element != null) {
-           return this.search(element, this.getRoot());
-       }
-       return new BSTNode<T>();
-    }
+	public BSTNode<T> search(T element) {
+		if (element != null) {
+			return this.search(element, this.getRoot());
+		}
+		return new BSTNode<T>();
+	}
 
 	private BSTNode<T> search(T element, BSTNode<T> node) {
-  	   if (node.isEmpty()) {
-  		   return node;
-  	   } else if (element.compareTo(node.getData()) > 0) {
-  		   return this.search(element, (BSTNode<T>) node.getRight());
-  	   } else if (element.compareTo(node.getData()) < 0) {
-  		   return this.search(element, (BSTNode<T>) node.getLeft());
-  	   } else {
-  		   return node;
-  	   }
-     }
+		if (node.isEmpty()) {
+			return node;
+		} else if (element.compareTo(node.getData()) > 0) {
+			return this.search(element, (BSTNode<T>) node.getRight());
+		} else if (element.compareTo(node.getData()) < 0) {
+			return this.search(element, (BSTNode<T>) node.getLeft());
+		} else {
+			return node;
+		}
+	}
 
 	@Override
-     public void insert(T element) {
-  	   if (element != null) {
-  		   this.insert(element, this.getRoot(), new BSTNode<T>());
-  	   }
-     } 
+	public void insert(T element) {
+		if (element != null) {
+			this.insert(element, this.getRoot(), new BSTNode<T>());
+		}
+	}
 
 	private void insert(T element, BSTNode<T> node, BSTNode<T> parent) {
-  	   if (node.isEmpty()) {
-  		   node.setData(element);
-  		   node.setLeft(new BSTNode<T>());
-  		   node.setRight(new BSTNode<T>());
-  		   node.setParent(parent);
-  	   } else if (element.compareTo(node.getData()) > 0) {
-  		   this.insert(element, (BSTNode<T>) node.getRight(), node);
-  	   } else if (element.compareTo(node.getData()) < 0) {
-  		   this.insert(element, (BSTNode<T>) node.getLeft(), node);
-  	   }
-     }
+		if (node.isEmpty()) {
+			node.setData(element);
+			node.setLeft(new BSTNode<T>());
+			node.setRight(new BSTNode<T>());
+			node.setParent(parent);
+		} else if (element.compareTo(node.getData()) > 0) {
+			this.insert(element, (BSTNode<T>) node.getRight(), node);
+		} else if (element.compareTo(node.getData()) < 0) {
+			this.insert(element, (BSTNode<T>) node.getLeft(), node);
+		}
+	}
+
 	@Override
-     public BSTNode<T> maximum() {
-        if (!this.isEmpty()) {
-           if (this.getRoot().getRight().isEmpty()) {
-              return this.getRoot();
-           } else {
-              return this.maximum(this.getRoot());
-           }
-        }
-        return null;
-     } 
+	public BSTNode<T> maximum() {
+		if (!this.isEmpty()) {
+			if (this.getRoot().getRight().isEmpty()) {
+				return this.getRoot();
+			} else {
+				return this.maximum(this.getRoot());
+			}
+		}
+		return null;
+	}
+
 	private BSTNode<T> maximum(BSTNode<T> node) {
 		if (node.getRight().isEmpty()) {
 			return node;
@@ -172,96 +176,96 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		}
 		return node.equals(node.getParent().getLeft());
 	}
-	
+
 	@Override
- 	public void remove(T element) {
- 		if (element != null) {
- 			BSTNode<T> node = search(element);
- 			if (node != null) {
- 				remove(node);
- 			}
-	 	}
+	public void remove(T element) {
+		if (element != null) {
+			BSTNode<T> node = search(element);
+			if (node != null) {
+				remove(node);
+			}
+		}
 	}
 
-    public void remove(BSTNode<T> node) {
- 	   if (node != null) {
- 		   if (!node.isEmpty()) {
- 			   int degree = this.degree(node);
- 			   
- 			   if (degree == 0) {
- 				   this.removeLeaf(node);
- 			   } else if (degree == 1) {
- 				   this.removeOneDegreeNode(node);
- 			   } else {
- 				   this.removeTwoDegreeNode(node);
- 			   }
- 		   }
- 	   }
-    }
+	public void remove(BSTNode<T> node) {
+		if (node != null) {
+			if (!node.isEmpty()) {
+				int degree = this.degree(node);
+
+				if (degree == 0) {
+					this.removeLeaf(node);
+				} else if (degree == 1) {
+					this.removeOneDegreeNode(node);
+				} else {
+					this.removeTwoDegreeNode(node);
+				}
+			}
+		}
+	}
 
 	private int degree(BSTNode<T> node) {
-	   if (node == null || node.isEmpty()) {
- 		   return -1;
- 	   } else if (node.isLeaf()) {
- 		   return 0;
- 	   } else if (!node.getLeft().isEmpty() && !node.getRight().isEmpty()) {
- 		   return 2;
- 	   } else {
- 		   return 1;
- 	   }
-    }
+		if (node == null || node.isEmpty()) {
+			return -1;
+		} else if (node.isLeaf()) {
+			return 0;
+		} else if (!node.getLeft().isEmpty() && !node.getRight().isEmpty()) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
 
 	private void removeLeaf(BSTNode<T> node) {
- 	   node.setData(null);
-    }
+		node.setData(null);
+	}
 
 	private void removeOneDegreeNode(BSTNode<T> node) {
- 	   if (node.getParent() == null || node.getParent().isEmpty()) {
- 		   if (!node.getLeft().isEmpty()) {
- 			   node.getLeft().setParent(null);
- 			   this.root = (BSTNode<T>) node.getLeft();
- 			   return;
- 		   } else {
- 			   node.getRight().setParent(null);
- 			   this.root = (BSTNode<T>) node.getRight();
-			   return;
- 		   }
- 	   }
-   BSTNode<T> aux;
- 	   if (!node.getRight().isEmpty()) {
- 		   aux = (BSTNode<T>) node.getRight();
- 	   } else {
- 		   aux = (BSTNode<T>) node.getLeft();
-	   }
- 	   
- 	   aux.setParent(node.getParent());
-	   if (node.equals(node.getParent().getLeft())) {
- 		   node.getParent().setLeft(aux);
- 	   } else {
- 		   node.getParent().setRight(aux);
- 	   }
-    }
+		if (node.getParent() == null || node.getParent().isEmpty()) {
+			if (!node.getLeft().isEmpty()) {
+				node.getLeft().setParent(null);
+				this.root = (BSTNode<T>) node.getLeft();
+				return;
+			} else {
+				node.getRight().setParent(null);
+				this.root = (BSTNode<T>) node.getRight();
+				return;
+			}
+		}
+		BSTNode<T> aux;
+		if (!node.getRight().isEmpty()) {
+			aux = (BSTNode<T>) node.getRight();
+		} else {
+			aux = (BSTNode<T>) node.getLeft();
+		}
+
+		aux.setParent(node.getParent());
+		if (node.equals(node.getParent().getLeft())) {
+			node.getParent().setLeft(aux);
+		} else {
+			node.getParent().setRight(aux);
+		}
+	}
 
 	private void removeTwoDegreeNode(BSTNode<T> node) {
- 	   BSTNode<T> sucessor = this.sucessor(node.getData());
- 	   if (sucessor != null) {
- 		   node.setData(sucessor.getData());
- 		   int degree = this.degree(sucessor);
- 		   if (degree == 0) {
- 			   this.removeLeaf(sucessor);
- 		   } else if (degree == 1) {
- 			   this.removeOneDegreeNode(sucessor);
- 		   } else {
- 			   this.removeTwoDegreeNode(sucessor);
- 		   }
-	   }
-    }
+		BSTNode<T> sucessor = this.sucessor(node.getData());
+		if (sucessor != null) {
+			node.setData(sucessor.getData());
+			int degree = this.degree(sucessor);
+			if (degree == 0) {
+				this.removeLeaf(sucessor);
+			} else if (degree == 1) {
+				this.removeOneDegreeNode(sucessor);
+			} else {
+				this.removeTwoDegreeNode(sucessor);
+			}
+		}
+	}
 
 	@Override
- 	public T[] preOrder() {
- 		List<T> list = new ArrayList<>(this.size());
- 		this.preOrder(this.getRoot(), list);
- 		return list.toArray((T[]) new Comparable[this.size()]);
+	public T[] preOrder() {
+		List<T> list = new ArrayList<>(this.size());
+		this.preOrder(this.getRoot(), list);
+		return list.toArray((T[]) new Comparable[this.size()]);
 	}
 
 	private void preOrder(BSTNode<T> node, List<T> list) {
@@ -314,6 +318,90 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 			result = 1 + size((BSTNode<T>) node.getLeft()) + size((BSTNode<T>) node.getRight());
 		}
 		return result;
+	}
+
+	public List<BSTNode<T>> buscaEmLargura() {
+		return buscaEmLargura(this.root);
+	}
+
+	private List<BSTNode<T>> buscaEmLargura(BSTNode<T> node) {
+		Queue<BSTNode<T>> q = new LinkedList<BSTNode<T>>();
+		List<BSTNode<T>> list = new ArrayList<BSTNode<T>>();
+
+		q.add(node);
+
+		while (!q.isEmpty()) {
+			node = q.poll();
+			list.add((node));
+
+			if (!node.getLeft().isEmpty()) {
+				q.add((BSTNode<T>) node.getLeft());
+			}
+
+			if (!node.getRight().isEmpty()) {
+				q.add((BSTNode<T>) node.getRight());
+			}
+
+		}
+
+		return list;
+	}
+
+	public BSTNode<T> estatisticaDeOrdem(int order) {
+		if (order <= 0 || order > this.size()){
+			return new BSTNode<T>();
+		}
+		
+		return estatisticaDeOrdem(this.minimum(), order, 0);
+	}
+
+	private BSTNode<T> estatisticaDeOrdem(BSTNode<T> node, int order, int i) {
+		if (!node.isEmpty()) {
+			i++;
+		}
+
+		if (i == order) {
+			return node;
+		}
+
+		return estatisticaDeOrdem(sucessor(node.getData()), order, i);
+	}
+
+	public T orderStatistic(BST<T> tree, int k) {
+		if (k > tree.size() || tree == null || k <= 0)
+			return null;
+		return this.orderStatistic((BSTNode<T>) tree.getRoot(), k, 0);
+	}
+
+	private T orderStatistic(BSTNode<T> node, int k, int statistic) {
+		int leftStatistic = getStatistic((BSTNode<T>) node.getLeft(), statistic);
+		leftStatistic++;
+		if (leftStatistic == k) {
+			return node.getData();
+		} else if (leftStatistic > k) {
+			return orderStatistic((BSTNode<T>) node.getLeft(), k, statistic);
+		} else {
+			return orderStatistic((BSTNode<T>) node.getRight(), k, leftStatistic);
+		}
+	}
+
+	/**
+	 * Returns the statistics of a given node.
+	 * 
+	 * @param node
+	 *            Analysed node.
+	 * @param statistic
+	 *            Current statistic number.
+	 * @return The statistic of the given node.
+	 */
+	private int getStatistic(BSTNode<T> node, int statistic) {
+		if (node == null || node.isEmpty())
+			return statistic;
+		statistic = getStatistic((BSTNode<T>) node.getLeft(), statistic);
+		statistic++;
+		statistic = getStatistic((BSTNode<T>) node.getRight(), statistic);
+
+		return statistic;
 	}
 
 }
